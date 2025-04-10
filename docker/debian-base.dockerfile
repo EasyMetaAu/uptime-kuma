@@ -46,13 +46,8 @@ RUN apt update && \
     apt --yes autoremove
 
 # Install cloudflared
-RUN curl https://pkg.cloudflare.com/cloudflare-main.gpg --output /usr/share/keyrings/cloudflare-main.gpg && \
-    echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared bullseye main' | tee /etc/apt/sources.list.d/cloudflared.list && \
-    apt update && \
-    apt install --yes --no-install-recommends -t stable cloudflared && \
-    cloudflared version && \
-    rm -rf /var/lib/apt/lists/* && \
-    apt --yes autoremove
+RUN curl --location --output cloudflared.deb https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64.deb && dpkg -i cloudflared.deb && \
+    cloudflared version
 
 # For nscd
 COPY ./docker/etc/nscd.conf /etc/nscd.conf
